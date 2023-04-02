@@ -25,6 +25,3 @@ jobs:
 
       - name: TS
         run: yarn run tsc --noemit
-
-      - name: build
-        run: yarn run build
