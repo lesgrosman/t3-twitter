@@ -1,35 +1,79 @@
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const path = require("path");
-
-/** @type {import("eslint").Linter.Config} */
-const config = {
-  overrides: [
-    {
-      extends: [
-        "plugin:@typescript-eslint/recommended-requiring-type-checking",
-      ],
-      files: ["*.ts", "*.tsx"],
-      parserOptions: {
-        project: path.join(__dirname, "tsconfig.json"),
-      },
-    },
+module.exports = {
+  parser: '@typescript-eslint/parser',
+  extends: [
+    'plugin:react/recommended',
+    'plugin:prettier/recommended',
+    'prettier',
+    'plugin:@typescript-eslint/recommended',
+    'plugin:@typescript-eslint/eslint-recommended',
+    'plugin:@next/next/recommended',
   ],
-  parser: "@typescript-eslint/parser",
   parserOptions: {
-    project: path.join(__dirname, "tsconfig.json"),
+    ecmaVersion: 2020,
+    sourceType: 'module',
+    ecmaFeatures: {
+      jsx: true,
+    },
   },
-  plugins: ["@typescript-eslint"],
-  extends: ["next/core-web-vitals", "plugin:@typescript-eslint/recommended"],
+  ignorePatterns: ['**/graphql.ts'],
   rules: {
-    "@typescript-eslint/consistent-type-imports": [
-      "warn",
+    '@typescript-eslint/semi': ['error', 'never'],
+    '@typescript-eslint/no-use-before-define': [
+      'error',
+      { functions: false, classes: false, variables: false, typedefs: true },
+    ],
+    '@typescript-eslint/explicit-function-return-type': 0,
+    '@typescript-eslint/prefer-interface': 0,
+    '@typescript-eslint/interface-name-prefix': 0,
+    '@typescript-eslint/no-non-null-assertion': 0,
+    '@typescript-eslint/explicit-module-boundary-types': 0,
+    '@typescript-eslint/camelcase': 0,
+    '@typescript-eslint/ban-ts-ignore': 0,
+    '@typescript-eslint/explicit-member-accessibility': 0,
+    'prettier/prettier': 'error',
+    '@typescript-eslint/no-var-requires': 0,
+    semi: 'off',
+    eqeqeq: 'error',
+    'no-use-before-define': [
+      'error',
       {
-        prefer: "type-imports",
-        fixStyle: "inline-type-imports",
+        functions: false,
+        classes: false,
+        variables: false,
       },
     ],
-    "@typescript-eslint/no-unused-vars": ["warn", { argsIgnorePattern: "^_" }],
+    'prefer-arrow-callback': 1,
+    // 'no-use-before-define': 0,
+    'max-len': [
+      'off',
+      {
+        code: 100,
+        ignoreComments: true,
+        ignorePattern: '^import .*',
+      },
+    ],
+    'new-parens': 'error',
+    'no-bitwise': ['error', { allow: ['~'] }],
+    'no-console': ['warn', { allow: ['warn', 'info', 'error'] }],
+    'no-caller': 'error',
+    'no-multiple-empty-lines': ['error', { max: 2, maxEOF: 1, maxBOF: 0 }],
+    'quote-props': ['error', 'as-needed'],
+    'sort-imports-es6-autofix/sort-imports-es6': [
+      2,
+      {
+        ignoreCase: false,
+        ignoreMemberSort: false,
+        memberSyntaxSortOrder: ['none', 'all', 'multiple', 'single'],
+      },
+    ],
+    'no-irregular-whitespace': 'warn',
+    'react/react-in-jsx-scope': 'off',
+    'no-constant-binary-expression': 'error',
   },
-};
-
-module.exports = config;
+  plugins: ['sort-imports-es6-autofix'],
+  settings: {
+    react: {
+      version: 'detect',
+    },
+  },
+}
