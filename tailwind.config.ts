@@ -5,5 +5,8 @@ export default {
   theme: {
     extend: {},
   },
-  plugins: [],
+  daisyui: {
+    themes: ['cmyk', 'dark'],
+  },
+  plugins: [require('daisyui')],
 } satisfies Config
