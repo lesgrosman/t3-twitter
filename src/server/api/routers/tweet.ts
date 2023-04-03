@@ -4,7 +4,13 @@ import { createTRPCRouter, protectedProcedure, publicProcedure } from '@/server/
 
 export const tweetRouter = createTRPCRouter({
   getAll: publicProcedure.query(async ({ ctx }) => {
-    const tweets = await ctx.prisma.tweet.findMany()
+    const tweets = await ctx.prisma.tweet.findMany({
+      include: {
+        author: true,
+        comments: true,
+        likes: true,
+      },
+    })
 
     return {
       tweets,
@@ -12,11 +18,24 @@ export const tweetRouter = createTRPCRouter({
   }),
 
   getMy: protectedProcedure
-    .input(z.object({ authorId: z.string() }))
+    .input(z.object({ authorEmail: z.string() }))
     .query(async ({ ctx, input }) => {
+      const user = await ctx.prisma.user.findUnique({
+        where: {
+          email: input.authorEmail,
+        },
+      })
+
+      if (!user) return null
+
       const tweets = await ctx.prisma.tweet.findMany({
         where: {
-          authorId: input.authorId,
+          authorId: user.id,
+        },
+        include: {
+          author: true,
+          comments: true,
+          likes: true,
         },
       })
 
