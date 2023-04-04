@@ -88,9 +88,9 @@ model Comment {
 
 model TweetLike {
     id        String   @id @default(cuid())
-    user      User     @relation(fields: [userId], references: [id])
-    userId    String
-    tweet     Tweet?   @relation(fields: [tweetId], references: [id])
+    author    User     @relation(fields: [authorId], references: [id])
+    authorId  String
+    tweet     Tweet    @relation(fields: [tweetId], references: [id])
     tweetId   String
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
@@ -98,10 +98,10 @@ model TweetLike {
 
 model CommentLike {
     id        String   @id @default(cuid())
-    user      User     @relation(fields: [userId], references: [id])
-    userId    String
-    comment   Comment? @relation(fields: [commentId], references: [id])
-    commentId String?
+    author    User     @relation(fields: [authorId], references: [id])
+    authorId  String
+    comment   Comment  @relation(fields: [commentId], references: [id])
+    commentId String
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 }

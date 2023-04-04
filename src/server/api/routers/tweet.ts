@@ -8,7 +8,11 @@ export const tweetRouter = createTRPCRouter({
       include: {
         author: true,
         comments: true,
-        likes: true,
+        likes: {
+          include: {
+            author: true,
+          },
+        },
       },
     })
 
@@ -35,7 +39,11 @@ export const tweetRouter = createTRPCRouter({
         include: {
           author: true,
           comments: true,
-          likes: true,
+          likes: {
+            include: {
+              author: true,
+            },
+          },
         },
       })
 
