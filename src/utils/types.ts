@@ -1,5 +1,5 @@
 import {
-  CommentLike,
+  CommentLike as CommentLikeType,
   Comment as CommentType,
   TweetLike as TweetLikeType,
   Tweet as TweetType,
@@ -10,13 +10,17 @@ export type TweetLike = TweetLikeType & {
   author: User
 }
 
-export type Tweet = TweetType & {
+export type CommentLike = CommentLikeType & {
   author: User
-  likes: TweetLike[]
-  comments: CommentType[]
 }
 
 export type Comment = CommentType & {
   author: User
   likes: CommentLike[]
+}
+
+export type Tweet = TweetType & {
+  author: User
+  likes: TweetLike[]
+  comments: CommentType[]
 }

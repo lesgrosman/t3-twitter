@@ -10,7 +10,11 @@ export const commentRouter = createTRPCRouter({
       },
       include: {
         author: true,
-        likes: true,
+        likes: {
+          include: {
+            author: true,
+          },
+        },
       },
     })
 

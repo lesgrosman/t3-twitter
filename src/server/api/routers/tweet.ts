@@ -98,7 +98,11 @@ export const tweetRouter = createTRPCRouter({
         comments: {
           include: {
             author: true,
-            likes: true,
+            likes: {
+              include: {
+                author: true,
+              },
+            },
           },
         },
         likes: {

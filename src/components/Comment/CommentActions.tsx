@@ -1,52 +1,47 @@
-import { ChatBubbleOvalLeftIcon } from '@heroicons/react/24/solid'
+import { Comment } from '@/utils/types'
 import { HeartIcon } from '@heroicons/react/24/solid'
-import { Tweet } from '@/utils/types'
 import { api } from '@/utils/api'
 import { useSession } from 'next-auth/react'
 
 interface Props {
-  tweet: Tweet
+  comment: Comment
 }
 
-const TweetActions = ({ tweet }: Props) => {
+const CommentActions = ({ comment }: Props) => {
   const { data: session } = useSession()
   const ctx = api.useContext()
 
-  const { mutate: like, isLoading: isLikeLoading } = api.like.likeTweet.useMutation({
+  const { mutate: like, isLoading: isLikeLoading } = api.like.likeComment.useMutation({
     onSuccess: async () => {
-      await ctx.tweet.getMy.invalidate()
-      await ctx.tweet.getAll.invalidate()
       await ctx.tweet.getById.invalidate()
     },
   })
-  const { mutate: dislike, isLoading: isDislikeLoading } = api.like.dislikeTweet.useMutation({
+  const { mutate: dislike, isLoading: isDislikeLoading } = api.like.dislikeComment.useMutation({
     onSuccess: async () => {
-      await ctx.tweet.getMy.invalidate()
-      await ctx.tweet.getAll.invalidate()
       await ctx.tweet.getById.invalidate()
     },
   })
 
-  const isLikedByMe = tweet.likes?.some(like => like.author.email === session?.user.email)
+  const isLikedByMe = comment.likes.some(like => like.author.email === session?.user.email)
   const isLikeButtonDisabled = isLikeLoading || isDislikeLoading
 
-  const likeTweet = () => {
+  const likeComment = () => {
     session?.user &&
       like({
-        id: tweet.id,
+        id: comment.id,
       })
   }
 
-  const dislikeTweet = () => {
+  const dislikeComment = () => {
     session?.user &&
       dislike({
-        id: tweet.id,
+        id: comment.id,
       })
   }
 
   const handleLikeOrDislike = (e: React.MouseEvent<HTMLElement>) => {
     e.stopPropagation()
-    isLikedByMe ? dislikeTweet() : likeTweet()
+    isLikedByMe ? dislikeComment() : likeComment()
   }
 
   return (
@@ -60,17 +55,11 @@ const TweetActions = ({ tweet }: Props) => {
               }`}
             />
           </button>
-          {<span className='text-sm'>{tweet.likes.length}</span>}
-        </div>
-        <div className='flex gap-1'>
-          <button>
-            <ChatBubbleOvalLeftIcon className='h-5 w-5 text-gray-300 transition-all duration-200 hover:scale-110' />
-          </button>
-          {<span className='text-sm'>{tweet.comments.length}</span>}
+          {<span className='text-sm'>{comment.likes.length}</span>}
         </div>
       </div>
     </div>
   )
 }
 
-export default TweetActions
+export default CommentActions

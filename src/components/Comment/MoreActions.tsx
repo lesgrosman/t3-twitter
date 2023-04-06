@@ -28,7 +28,7 @@ const MoreActions = ({ comment }: Props) => {
   }
 
   return isMyComment ? (
-    <div className={`dropdown dropdown-left dropdown-hover`}>
+    <div className={`dropdown-left dropdown-hover dropdown`}>
       <button
         className='h-6 w-6 text-gray-500 transition-all duration-200 hover:scale-110'
         onClick={e => e.stopPropagation()}
