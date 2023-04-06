@@ -36,7 +36,7 @@ const MoreActions = ({ tweet, openModal }: Props) => {
 
   return isMyTweet ? (
     <div>
-      <div className={`dropdown-left dropdown-hover dropdown`}>
+      <div className='dropdown-left dropdown-hover dropdown'>
         <button
           className='h-6 w-6 text-gray-500 transition-all duration-200 hover:scale-110'
           onClick={e => e.stopPropagation()}

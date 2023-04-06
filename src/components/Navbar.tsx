@@ -36,7 +36,7 @@ const UserLogo = () => {
   }
 
   return (
-    <div className='dropdown-end'>
+    <div className='dropdown dropdown-bottom dropdown-end'>
       <label tabIndex={0} className='btn-ghost btn-circle avatar btn'>
         <div className='w-10 rounded-full'>
           <NextImage src={session.user.image || ''} alt='profile' fill className='rounded-full' />
