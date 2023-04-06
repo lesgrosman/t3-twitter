@@ -30,7 +30,7 @@ module.exports = {
     '@typescript-eslint/camelcase': 0,
     '@typescript-eslint/ban-ts-ignore': 0,
     '@typescript-eslint/explicit-member-accessibility': 0,
-    'prettier/prettier': 'error',
+    'prettier/prettier': 'warn',
     '@typescript-eslint/no-var-requires': 0,
     semi: 'off',
     eqeqeq: 'error',
