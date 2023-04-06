@@ -3,12 +3,12 @@ import { z } from 'zod'
 import { createTRPCRouter, protectedProcedure } from '@/server/api/trpc'
 
 export const likeRouter = createTRPCRouter({
-  create: protectedProcedure
-    .input(z.object({ id: z.string(), authorEmail: z.string() }))
+  likeTweet: protectedProcedure
+    .input(z.object({ id: z.string() }))
     .mutation(async ({ ctx, input }) => {
       const user = await ctx.prisma.user.findUnique({
         where: {
-          email: input.authorEmail,
+          email: ctx.session.user.email || '',
         },
       })
 
@@ -39,12 +39,12 @@ export const likeRouter = createTRPCRouter({
       return tweetLike
     }),
 
-  delete: protectedProcedure
-    .input(z.object({ id: z.string(), authorEmail: z.string() }))
+  dislikeTweet: protectedProcedure
+    .input(z.object({ id: z.string() }))
     .mutation(async ({ ctx, input }) => {
       const user = await ctx.prisma.user.findUnique({
         where: {
-          email: input.authorEmail,
+          email: ctx.session.user.email || '',
         },
       })
 
@@ -74,5 +74,78 @@ export const likeRouter = createTRPCRouter({
       })
 
       return tweetLikeId
+    }),
+
+  likeComment: protectedProcedure
+    .input(z.object({ id: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const user = await ctx.prisma.user.findUnique({
+        where: {
+          email: ctx.session.user.email || '',
+        },
+      })
+
+      if (!user) throw new Error('INTERNAL SERVER ERROR: Unauthorized')
+
+      const comment = await ctx.prisma.comment.findUnique({
+        where: {
+          id: input.id,
+        },
+        include: {
+          likes: true,
+        },
+      })
+
+      if (!comment) throw new Error('INTERNAL SERVER ERROR: Comment does not exist')
+
+      if (comment.likes.some(like => like.authorId === user.id)) {
+        throw new Error('INTERNAL SERVER ERROR: Current user already liked this comment')
+      }
+
+      const commentLike = await ctx.prisma.commentLike.create({
+        data: {
+          authorId: user.id,
+          commentId: input.id,
+        },
+      })
+
+      return commentLike
+    }),
+
+  dislikeComment: protectedProcedure
+    .input(z.object({ id: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const user = await ctx.prisma.user.findUnique({
+        where: {
+          email: ctx.session.user.email || '',
+        },
+      })
+
+      if (!user) throw new Error('INTERNAL SERVER ERROR: User does not exist')
+
+      const comment = await ctx.prisma.comment.findUnique({
+        where: {
+          id: input.id,
+        },
+        include: {
+          likes: true,
+        },
+      })
+
+      if (!comment) throw new Error('INTERNAL SERVER ERROR: Comment does not exist')
+
+      const commentLike = comment.likes.find(like => like.authorId === user.id)
+
+      if (!commentLike) {
+        throw new Error('INTERNAL SERVER ERROR: Current user didnt like this comment')
+      }
+
+      const commentlikeId = await ctx.prisma.commentLike.delete({
+        where: {
+          id: commentLike.id,
+        },
+      })
+
+      return commentlikeId
     }),
 })

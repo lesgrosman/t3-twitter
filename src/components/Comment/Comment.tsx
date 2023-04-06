@@ -1,4 +1,5 @@
 import { Comment as CommentType } from '@/utils/types'
+import CommentActions from './CommentActions'
 import LocalizedDate from '@/utils/components/LocalizedDate'
 import MoreActions from './MoreActions'
 import NextImage from 'next/image'
@@ -9,7 +10,7 @@ interface Props {
 
 const Comment = ({ comment }: Props) => {
   return (
-    <div className='w-full border-b-[1px] p-4 hover:bg-slate-100'>
+    <div className='w-full border-b-[1px] p-4'>
       <div className='flex gap-4'>
         <div className='flex flex-shrink-0 items-start'>
           <NextImage
@@ -31,6 +32,7 @@ const Comment = ({ comment }: Props) => {
             <MoreActions comment={comment} />
           </div>
           <span className='text-gray-500'>{comment.content}</span>
+          <CommentActions comment={comment} />
         </div>
       </div>
     </div>
