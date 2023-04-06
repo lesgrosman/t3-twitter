@@ -1,12 +1,15 @@
 import { signIn, signOut, useSession } from 'next-auth/react'
 import NextImage from 'next/image'
+import NextLink from 'next/link'
 
 const NavBar = () => {
   return (
     <div className='navbar bg-primary'>
       <div className='mx-auto flex w-full max-w-7xl justify-between'>
         <div className='flex-1'>
-          <a className='btn-ghost btn text-xl normal-case'>Twitter</a>
+          <NextLink className='btn-ghost btn text-xl normal-case' href='/'>
+            Twitter
+          </NextLink>
         </div>
         <div className='flex gap-2'>
           <div className='form-control'>
@@ -33,7 +36,7 @@ const UserLogo = () => {
   }
 
   return (
-    <div className='dropdown-end dropdown'>
+    <div className='dropdown-end'>
       <label tabIndex={0} className='btn-ghost btn-circle avatar btn'>
         <div className='w-10 rounded-full'>
           <NextImage src={session.user.image || ''} alt='profile' fill className='rounded-full' />

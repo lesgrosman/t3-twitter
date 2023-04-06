@@ -64,14 +64,14 @@ model User {
 }
 
 model Tweet {
-    id        String   @id @default(cuid())
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
-    content   String   @db.VarChar(240)
-    authorId  String
-    author    User     @relation(fields: [authorId], references: [id])
-    comments  Comment[]
-    likes     TweetLike[]
+    id            String      @id @default(cuid())
+    createdAt     DateTime    @default(now())
+    updatedAt     DateTime    @updatedAt
+    content       String      @db.VarChar(240)
+    authorId      String
+    author        User        @relation(fields: [authorId], references: [id])
+    comments      Comment[]
+    likes         TweetLike[]
 }
 
 model Comment {
