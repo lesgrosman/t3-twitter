@@ -1,12 +1,15 @@
 import { signIn, signOut, useSession } from 'next-auth/react'
 import NextImage from 'next/image'
+import NextLink from 'next/link'
 
 const NavBar = () => {
   return (
     <div className='navbar bg-primary'>
       <div className='mx-auto flex w-full max-w-7xl justify-between'>
         <div className='flex-1'>
-          <a className='btn-ghost btn text-xl normal-case'>Twitter</a>
+          <NextLink className='btn-ghost btn text-xl normal-case' href='/'>
+            Twitter
+          </NextLink>
         </div>
         <div className='flex gap-2'>
           <div className='form-control'>

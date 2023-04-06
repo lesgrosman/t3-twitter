@@ -1,6 +1,6 @@
 import { useSession } from 'next-auth/react'
 import { useState } from 'react'
-import ModalCreateTweet from './Modal/ModalCreateTweet'
+import ModalCreateTweet from './Modal/Tweet/ModalCreateTweet'
 import NextLink from 'next/link'
 
 const Sidebar = () => {
@@ -14,8 +14,8 @@ const Sidebar = () => {
       <ModalCreateTweet
         onClose={() => setIsModalOpen(false)}
         authorImage={session.user.image}
-        authorEmail={session.user.email}
         isOpen={isOpen}
+        title='Write a tweet!'
       />
       <ul className='menu rounded-box w-56 gap-2 bg-base-100 p-2 text-xl'>
         <li>

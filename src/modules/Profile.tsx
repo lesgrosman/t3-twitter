@@ -3,12 +3,9 @@ import { useSession } from 'next-auth/react'
 import Feed from '@/components/Feed'
 import NextImage from 'next/image'
 
-const ProfilePage = () => {
+const Profile = () => {
   const { data: session } = useSession()
-
-  const { data } = api.tweet.getMy.useQuery({
-    authorEmail: session?.user.email || '',
-  })
+  const { data } = api.tweet.getMy.useQuery()
 
   if (!session) return null
 
@@ -30,4 +27,4 @@ const ProfilePage = () => {
   )
 }
 
-export default ProfilePage
+export default Profile

@@ -1,11 +1,22 @@
-import { Comment, Tweet, TweetLike, User } from '@prisma/client'
+import {
+  CommentLike,
+  Comment as CommentType,
+  TweetLike as TweetLikeType,
+  Tweet as TweetType,
+  User,
+} from '@prisma/client'
 
-export type TweetLikeType = TweetLike & {
+export type TweetLike = TweetLikeType & {
   author: User
 }
 
-export type TweetType = Tweet & {
-  comments?: Comment[]
+export type Tweet = TweetType & {
   author: User
-  likes?: TweetLikeType[]
+  likes: TweetLike[]
+  comments: CommentType[]
+}
+
+export type Comment = CommentType & {
+  author: User
+  likes: CommentLike[]
 }

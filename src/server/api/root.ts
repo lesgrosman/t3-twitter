@@ -1,3 +1,4 @@
+import { commentRouter } from './routers/comment'
 import { createTRPCRouter } from '@/server/api/trpc'
 import { likeRouter } from './routers/like'
 import { tweetRouter } from './routers/tweet'
@@ -10,6 +11,7 @@ import { tweetRouter } from './routers/tweet'
 export const appRouter = createTRPCRouter({
   tweet: tweetRouter,
   like: likeRouter,
+  comment: commentRouter,
 })
 
 // export type definition of API

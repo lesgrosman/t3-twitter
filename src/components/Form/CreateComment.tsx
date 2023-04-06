@@ -3,23 +3,27 @@ import { useSession } from 'next-auth/react'
 import { useState } from 'react'
 import NextImage from 'next/image'
 
-const CreateTweet = () => {
+interface Props {
+  tweetId: string
+}
+
+const CreateComment = ({ tweetId }: Props) => {
   const [content, setContent] = useState('')
   const ctx = api.useContext()
+  const { data: session } = useSession()
 
-  const { mutate, isLoading } = api.tweet.create.useMutation({
+  const { mutate, isLoading } = api.comment.create.useMutation({
     onSuccess: async () => {
       setContent('')
-      await ctx.tweet.getAll.invalidate()
+      await ctx.tweet.getById.invalidate()
     },
   })
-
-  const { data: session } = useSession()
 
   if (!session) return null
 
   const handleCreate = () => {
     mutate({
+      id: tweetId,
       content,
     })
   }
@@ -27,7 +31,7 @@ const CreateTweet = () => {
   const isDisabled = !content.trim() || isLoading
 
   return (
-    <div className='flex w-full gap-4 border-b-[1px] p-4'>
+    <div className='flex w-full gap-4 p-4'>
       <div className='flex flex-shrink-0 items-start'>
         <NextImage
           width={32}
@@ -42,12 +46,12 @@ const CreateTweet = () => {
           value={content}
           onChange={e => setContent(e.target.value)}
           className='text-md textarea-primary textarea textarea-lg w-full border p-2 leading-6'
-          placeholder='Whats happening?'
-          rows={5}
+          placeholder='What do you think?'
+          rows={4}
         />
         <div className='flex justify-end'>
           <button className='btn-primary btn' disabled={isDisabled} onClick={handleCreate}>
-            Tweet
+            Comment
           </button>
         </div>
       </div>
@@ -55,4 +59,4 @@ const CreateTweet = () => {
   )
 }
 
-export default CreateTweet
+export default CreateComment

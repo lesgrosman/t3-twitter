@@ -1,8 +1,8 @@
-import { TweetType } from '@/utils/types'
-import Tweet from '@/components/Tweet'
+import { Tweet as TweeType } from '@/utils/types'
+import Tweet from '@/components/Tweet/Tweet'
 
 interface Props {
-  tweets: TweetType[]
+  tweets: TweeType[]
 }
 
 const Feed = ({ tweets }: Props) => {
