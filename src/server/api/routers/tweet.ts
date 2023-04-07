@@ -163,6 +163,26 @@ export const tweetRouter = createTRPCRouter({
   delete: protectedProcedure
     .input(z.object({ id: z.string() }))
     .mutation(async ({ ctx, input }) => {
+      const { prisma } = ctx
+      await prisma.$transaction([
+        prisma.tweetLike.deleteMany({
+          where: {
+            tweetId: input.id,
+          },
+        }),
+        prisma.commentLike.deleteMany({
+          where: {
+            comment: {
+              tweetId: input.id,
+            },
+          },
+        }),
+        prisma.comment.deleteMany({
+          where: {
+            tweetId: input.id,
+          },
+        }),
+      ])
       const tweetId = await ctx.prisma.tweet.delete({
         where: {
           id: input.id,

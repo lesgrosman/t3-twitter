@@ -16,10 +16,30 @@ export const commentRouter = createTRPCRouter({
           },
         },
       },
+      orderBy: {
+        createdAt: 'desc',
+      },
     })
 
     return {
       comments,
+    }
+  }),
+
+  getById: publicProcedure.input(z.object({ id: z.string() })).query(async ({ ctx, input }) => {
+    const comment = await ctx.prisma.comment.findUnique({
+      where: {
+        id: input.id,
+      },
+      include: {
+        author: true,
+      },
+    })
+
+    if (!comment) throw new Error('INTERNAL_SERVER_ERROR: Comment does not exist')
+
+    return {
+      comment,
     }
   }),
 
@@ -47,9 +67,34 @@ export const commentRouter = createTRPCRouter({
       }
     }),
 
+  update: protectedProcedure
+    .input(z.object({ id: z.string(), content: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const comment = await ctx.prisma.comment.update({
+        where: {
+          id: input.id,
+        },
+        data: {
+          content: input.content,
+        },
+      })
+
+      return {
+        comment,
+      }
+    }),
+
   delete: protectedProcedure
     .input(z.object({ id: z.string() }))
     .mutation(async ({ ctx, input }) => {
+      const { prisma } = ctx
+      await prisma.$transaction([
+        prisma.commentLike.deleteMany({
+          where: {
+            commentId: input.id,
+          },
+        }),
+      ])
       const commentId = await ctx.prisma.comment.delete({
         where: {
           id: input.id,
