@@ -5,9 +5,10 @@ import { useSession } from 'next-auth/react'
 
 interface Props {
   comment: Comment
+  openModal: () => void
 }
 
-const MoreActions = ({ comment }: Props) => {
+const MoreActions = ({ comment, openModal }: Props) => {
   const { data: session } = useSession()
   const ctx = api.useContext()
 
@@ -27,6 +28,11 @@ const MoreActions = ({ comment }: Props) => {
       })
   }
 
+  const handleEdit = (e: React.MouseEvent<HTMLElement>) => {
+    e.stopPropagation()
+    openModal()
+  }
+
   return isMyComment ? (
     <div className={`dropdown-left dropdown-hover dropdown`}>
       <button
@@ -36,6 +42,9 @@ const MoreActions = ({ comment }: Props) => {
         <EllipsisVerticalIcon />
       </button>
       <ul className='dropdown-content menu rounded-box w-52 bg-base-100 p-2 shadow'>
+        <li>
+          <button onClick={handleEdit}>Edit</button>
+        </li>
         <li>
           <button onClick={handleDelete}>Delete</button>
         </li>

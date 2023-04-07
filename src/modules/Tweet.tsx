@@ -17,6 +17,8 @@ const Tweet = () => {
 
   const { tweet } = data
 
+  console.log(tweet)
+
   return (
     <div>
       <div className='border-b-[1px] p-4'>
