@@ -16,7 +16,7 @@ const CommentActions = ({ comment }: Props) => {
       await ctx.tweet.getById.invalidate()
     },
   })
-  const { mutate: dislike, isLoading: isDislikeLoading } = api.like.dislikeComment.useMutation({
+  const { mutate: unlike, isLoading: isDislikeLoading } = api.like.unlikeComment.useMutation({
     onSuccess: async () => {
       await ctx.tweet.getById.invalidate()
     },
@@ -32,16 +32,16 @@ const CommentActions = ({ comment }: Props) => {
       })
   }
 
-  const dislikeComment = () => {
+  const unlikeComment = () => {
     session?.user &&
-      dislike({
+      unlike({
         id: comment.id,
       })
   }
 
   const handleLikeOrDislike = (e: React.MouseEvent<HTMLElement>) => {
     e.stopPropagation()
-    isLikedByMe ? dislikeComment() : likeComment()
+    isLikedByMe ? unlikeComment() : likeComment()
   }
 
   return (

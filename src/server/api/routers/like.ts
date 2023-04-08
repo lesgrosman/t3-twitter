@@ -34,12 +34,15 @@ export const likeRouter = createTRPCRouter({
           authorId: user.id,
           tweetId: input.id,
         },
+        include: {
+          author: true,
+        },
       })
 
       return tweetLike
     }),
 
-  dislikeTweet: protectedProcedure
+  unlikeTweet: protectedProcedure
     .input(z.object({ id: z.string() }))
     .mutation(async ({ ctx, input }) => {
       const user = await ctx.prisma.user.findUnique({
@@ -67,13 +70,16 @@ export const likeRouter = createTRPCRouter({
         throw new Error('INTERNAL SERVER ERROR: Current user didnt like this tweet')
       }
 
-      const tweetLikeId = await ctx.prisma.tweetLike.delete({
+      const removedTweetLike = await ctx.prisma.tweetLike.delete({
         where: {
           id: tweeLike.id,
         },
+        include: {
+          author: true,
+        },
       })
 
-      return tweetLikeId
+      return removedTweetLike
     }),
 
   likeComment: protectedProcedure
@@ -112,7 +118,7 @@ export const likeRouter = createTRPCRouter({
       return commentLike
     }),
 
-  dislikeComment: protectedProcedure
+  unlikeComment: protectedProcedure
     .input(z.object({ id: z.string() }))
     .mutation(async ({ ctx, input }) => {
       const user = await ctx.prisma.user.findUnique({

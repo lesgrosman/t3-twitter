@@ -1,29 +1,39 @@
 import { ChatBubbleOvalLeftIcon } from '@heroicons/react/24/solid'
 import { HeartIcon } from '@heroicons/react/24/solid'
+import { QueryClient } from '@tanstack/react-query'
 import { Tweet } from '@/utils/types'
 import { api } from '@/utils/api'
+import { updateCache } from '@/modules/Home/updateCache'
 import { useSession } from 'next-auth/react'
 
 interface Props {
   tweet: Tweet
+  client?: QueryClient
 }
 
-const TweetActions = ({ tweet }: Props) => {
+const TweetActions = ({ tweet, client }: Props) => {
   const { data: session } = useSession()
-  const ctx = api.useContext()
 
   const { mutate: like, isLoading: isLikeLoading } = api.like.likeTweet.useMutation({
-    onSuccess: async () => {
-      await ctx.tweet.getMy.invalidate()
-      await ctx.tweet.getAll.invalidate()
-      await ctx.tweet.getById.invalidate()
+    onSuccess: (data, variables) => {
+      client &&
+        updateCache({
+          client,
+          variables,
+          data,
+          action: 'like',
+        })
     },
   })
-  const { mutate: dislike, isLoading: isDislikeLoading } = api.like.dislikeTweet.useMutation({
-    onSuccess: async () => {
-      await ctx.tweet.getMy.invalidate()
-      await ctx.tweet.getAll.invalidate()
-      await ctx.tweet.getById.invalidate()
+  const { mutate: unlike, isLoading: isDislikeLoading } = api.like.unlikeTweet.useMutation({
+    onSuccess: (data, variables) => {
+      client &&
+        updateCache({
+          client,
+          variables,
+          data,
+          action: 'unlike',
+        })
     },
   })
 
@@ -37,16 +47,16 @@ const TweetActions = ({ tweet }: Props) => {
       })
   }
 
-  const dislikeTweet = () => {
+  const unlikeTweet = () => {
     session?.user &&
-      dislike({
+      unlike({
         id: tweet.id,
       })
   }
 
   const handleLikeOrDislike = (e: React.MouseEvent<HTMLElement>) => {
     e.stopPropagation()
-    isLikedByMe ? dislikeTweet() : likeTweet()
+    isLikedByMe ? unlikeTweet() : likeTweet()
   }
 
   return (

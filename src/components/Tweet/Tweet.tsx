@@ -1,3 +1,4 @@
+import { QueryClient } from '@tanstack/react-query'
 import { Tweet } from '@/utils/types'
 import { useRouter } from 'next/router'
 import { useState } from 'react'
@@ -9,9 +10,10 @@ import TweetActions from './TweetActions'
 
 interface Props {
   tweet: Tweet
+  client?: QueryClient
 }
 
-const Tweet = ({ tweet }: Props) => {
+const Tweet = ({ tweet, client }: Props) => {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const router = useRouter()
 
@@ -53,7 +55,7 @@ const Tweet = ({ tweet }: Props) => {
               <MoreActions tweet={tweet} openModal={() => setIsModalOpen(true)} />
             </div>
             <span>{tweet.content}</span>
-            <TweetActions tweet={tweet} />
+            <TweetActions tweet={tweet} client={client} />
           </div>
         </div>
       </div>

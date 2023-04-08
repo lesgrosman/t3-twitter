@@ -1,5 +1,6 @@
 /* eslint-disable react/prop-types */
 import { type AppType } from 'next/app'
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import { type Session } from 'next-auth'
 import { SessionProvider } from 'next-auth/react'
 
@@ -17,6 +18,7 @@ const MyApp: AppType<{ session: Session | null }> = ({
       <Layout>
         <Component {...pageProps} />
       </Layout>
+      <ReactQueryDevtools initialIsOpen={false} />
     </SessionProvider>
   )
 }

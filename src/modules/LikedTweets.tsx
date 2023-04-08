@@ -1,6 +1,6 @@
 import { api } from '@/utils/api'
 import CreateTweet from '@/components/Form/CreateTweet'
-import Feed from '@/components/Feed'
+import Tweet from '@/components/Tweet/Tweet'
 
 const LikedTweets = () => {
   const { data } = api.tweet.getLiked.useQuery()
@@ -10,7 +10,9 @@ const LikedTweets = () => {
   return (
     <div>
       <CreateTweet />
-      <Feed tweets={data.tweets} />
+      {data.tweets.map(tweet => (
+        <Tweet key={tweet.id} tweet={tweet} />
+      ))}
     </div>
   )
 }
