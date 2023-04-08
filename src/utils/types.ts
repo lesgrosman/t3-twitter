@@ -6,6 +6,8 @@ import {
   User,
 } from '@prisma/client'
 
+export type TimelineQueryKey = 'getAll' | 'getMy' | 'getLiked'
+
 export type TweetLike = TweetLikeType & {
   author: User
 }

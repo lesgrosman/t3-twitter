@@ -1,11 +1,12 @@
 import { QueryClient } from '@tanstack/react-query'
-import { Tweet, TweetLike } from '@/utils/types'
+import { TimelineQueryKey, Tweet, TweetLike } from '@/utils/types'
 
 export const updateCache = ({
   client,
   variables,
   data,
   action,
+  queryKey,
 }: {
   client: QueryClient
   variables: {
@@ -13,10 +14,11 @@ export const updateCache = ({
   }
   data: TweetLike
   action: 'like' | 'unlike'
+  queryKey: TimelineQueryKey
 }) => {
   client.setQueryData(
     [
-      ['tweet', 'getAll'],
+      ['tweet', queryKey],
       {
         type: 'query',
       },

@@ -1,7 +1,7 @@
 import { api } from '@/utils/api'
 import { useSession } from 'next-auth/react'
 import NextImage from 'next/image'
-import Tweet from '@/components/Tweet/Tweet'
+import Timeline from '@/components/Timeline/Timeline'
 
 const Profile = () => {
   const { data: session } = useSession()
@@ -22,9 +22,7 @@ const Profile = () => {
         <h1 className='text-xl font-semibold'>{session.user.name}</h1>
         <span className='mb-8 text-gray-400'>{session.user.email}</span>
       </div>
-      {data?.tweets.map(tweet => (
-        <Tweet key={tweet.id} tweet={tweet} />
-      ))}
+      <Timeline tweets={data?.tweets || []} queryKey='getMy' />
     </div>
   )
 }
