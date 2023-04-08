@@ -53,7 +53,12 @@ const Tweet = ({ tweet, client, queryKey }: Props) => {
                   <LocalizedDate date={tweet.createdAt} />
                 </span>
               </div>
-              <MoreActions tweet={tweet} openModal={() => setIsModalOpen(true)} />
+              <MoreActions
+                tweet={tweet}
+                openModal={() => setIsModalOpen(true)}
+                client={client}
+                queryKey={queryKey}
+              />
             </div>
             <span>{tweet.content}</span>
             <TweetActions tweet={tweet} client={client} queryKey={queryKey} />
