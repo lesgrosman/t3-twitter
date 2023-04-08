@@ -1,5 +1,5 @@
 import { QueryClient } from '@tanstack/react-query'
-import { Tweet } from '@/utils/types'
+import { TimelineQueryKey, Tweet } from '@/utils/types'
 import { useRouter } from 'next/router'
 import { useState } from 'react'
 import LocalizedDate from '@/utils/components/LocalizedDate'
@@ -11,9 +11,10 @@ import TweetActions from './TweetActions'
 interface Props {
   tweet: Tweet
   client?: QueryClient
+  queryKey: TimelineQueryKey
 }
 
-const Tweet = ({ tweet, client }: Props) => {
+const Tweet = ({ tweet, client, queryKey }: Props) => {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const router = useRouter()
 
@@ -52,10 +53,15 @@ const Tweet = ({ tweet, client }: Props) => {
                   <LocalizedDate date={tweet.createdAt} />
                 </span>
               </div>
-              <MoreActions tweet={tweet} openModal={() => setIsModalOpen(true)} />
+              <MoreActions
+                tweet={tweet}
+                openModal={() => setIsModalOpen(true)}
+                client={client}
+                queryKey={queryKey}
+              />
             </div>
             <span>{tweet.content}</span>
-            <TweetActions tweet={tweet} client={client} />
+            <TweetActions tweet={tweet} client={client} queryKey={queryKey} />
           </div>
         </div>
       </div>

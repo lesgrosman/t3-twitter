@@ -1,17 +1,18 @@
 import { ChatBubbleOvalLeftIcon } from '@heroicons/react/24/solid'
 import { HeartIcon } from '@heroicons/react/24/solid'
 import { QueryClient } from '@tanstack/react-query'
-import { Tweet } from '@/utils/types'
+import { TimelineQueryKey, Tweet } from '@/utils/types'
 import { api } from '@/utils/api'
-import { updateCache } from '@/modules/Home/updateCache'
+import { updateCache } from '../Timeline/updateCache'
 import { useSession } from 'next-auth/react'
 
 interface Props {
   tweet: Tweet
   client?: QueryClient
+  queryKey?: TimelineQueryKey
 }
 
-const TweetActions = ({ tweet, client }: Props) => {
+const TweetActions = ({ tweet, client, queryKey }: Props) => {
   const { data: session } = useSession()
 
   const { mutate: like, isLoading: isLikeLoading } = api.like.likeTweet.useMutation({
@@ -22,6 +23,7 @@ const TweetActions = ({ tweet, client }: Props) => {
           variables,
           data,
           action: 'like',
+          queryKey,
         })
     },
   })
@@ -33,6 +35,7 @@ const TweetActions = ({ tweet, client }: Props) => {
           variables,
           data,
           action: 'unlike',
+          queryKey,
         })
     },
   })

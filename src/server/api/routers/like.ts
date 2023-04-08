@@ -113,6 +113,9 @@ export const likeRouter = createTRPCRouter({
           authorId: user.id,
           commentId: input.id,
         },
+        include: {
+          author: true,
+        },
       })
 
       return commentLike
@@ -146,12 +149,15 @@ export const likeRouter = createTRPCRouter({
         throw new Error('INTERNAL SERVER ERROR: Current user didnt like this comment')
       }
 
-      const commentlikeId = await ctx.prisma.commentLike.delete({
+      const removedCommentLike = await ctx.prisma.commentLike.delete({
         where: {
           id: commentLike.id,
         },
+        include: {
+          author: true,
+        },
       })
 
-      return commentlikeId
+      return removedCommentLike
     }),
 })
