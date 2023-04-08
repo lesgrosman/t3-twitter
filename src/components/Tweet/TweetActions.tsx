@@ -9,7 +9,7 @@ import { useSession } from 'next-auth/react'
 interface Props {
   tweet: Tweet
   client?: QueryClient
-  queryKey: TimelineQueryKey
+  queryKey?: TimelineQueryKey
 }
 
 const TweetActions = ({ tweet, client, queryKey }: Props) => {

@@ -1,4 +1,5 @@
 import { Comment as CommentType } from '@/utils/types'
+import { QueryClient } from '@tanstack/react-query'
 import { useState } from 'react'
 import CommentActions from './CommentActions'
 import LocalizedDate from '@/utils/components/LocalizedDate'
@@ -8,9 +9,10 @@ import NextImage from 'next/image'
 
 interface Props {
   comment: CommentType
+  client: QueryClient
 }
 
-const Comment = ({ comment }: Props) => {
+const Comment = ({ comment, client }: Props) => {
   const [isModalOpen, setIsModalOpen] = useState(false)
   return (
     <>
@@ -43,7 +45,7 @@ const Comment = ({ comment }: Props) => {
               <MoreActions comment={comment} openModal={() => setIsModalOpen(true)} />
             </div>
             <span className='text-gray-500'>{comment.content}</span>
-            <CommentActions comment={comment} />
+            <CommentActions comment={comment} client={client} />
           </div>
         </div>
       </div>

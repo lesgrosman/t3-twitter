@@ -12,7 +12,7 @@ const Timeline = ({ tweets, queryKey }: Props) => {
 
   return (
     <div>
-      {tweets.map(tweet => (
+      {tweets?.map(tweet => (
         <Tweet key={tweet.id} tweet={tweet} client={client} queryKey={queryKey} />
       ))}
     </div>

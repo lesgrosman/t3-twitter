@@ -14,7 +14,7 @@ export const updateCache = ({
   }
   data: TweetLike
   action: 'like' | 'unlike'
-  queryKey: TimelineQueryKey
+  queryKey?: TimelineQueryKey
 }) => {
   client.setQueryData(
     [

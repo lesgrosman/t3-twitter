@@ -1,4 +1,5 @@
 import { api } from '@/utils/api'
+import { useQueryClient } from '@tanstack/react-query'
 import { useRouter } from 'next/router'
 import Comment from '@/components/Comment/Comment'
 import CreateComment from '@/components/Form/CreateComment'
@@ -6,6 +7,7 @@ import NextImage from 'next/image'
 import TweetActions from '@/components/Tweet/TweetActions'
 
 const Tweet = () => {
+  const client = useQueryClient()
   const router = useRouter()
   const { id } = router.query
 
@@ -47,7 +49,7 @@ const Tweet = () => {
       </div>
       <div>
         {tweet.comments.map(comment => (
-          <Comment key={comment.id} comment={comment} />
+          <Comment key={comment.id} comment={comment} client={client} />
         ))}
       </div>
     </div>

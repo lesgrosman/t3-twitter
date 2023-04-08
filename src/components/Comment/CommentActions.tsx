@@ -1,24 +1,38 @@
 import { Comment } from '@/utils/types'
 import { HeartIcon } from '@heroicons/react/24/solid'
+import { QueryClient } from '@tanstack/react-query'
 import { api } from '@/utils/api'
+import { updateCacheCommentLikes } from './updateCacheLikes'
 import { useSession } from 'next-auth/react'
 
 interface Props {
   comment: Comment
+  client: QueryClient
 }
 
-const CommentActions = ({ comment }: Props) => {
+const CommentActions = ({ comment, client }: Props) => {
   const { data: session } = useSession()
-  const ctx = api.useContext()
 
   const { mutate: like, isLoading: isLikeLoading } = api.like.likeComment.useMutation({
-    onSuccess: async () => {
-      await ctx.tweet.getById.invalidate()
+    onSuccess: async (data, variables) => {
+      await updateCacheCommentLikes({
+        client,
+        tweetId: comment.tweetId,
+        action: 'like',
+        data,
+        variables,
+      })
     },
   })
   const { mutate: unlike, isLoading: isDislikeLoading } = api.like.unlikeComment.useMutation({
-    onSuccess: async () => {
-      await ctx.tweet.getById.invalidate()
+    onSuccess: async (data, variables) => {
+      await updateCacheCommentLikes({
+        client,
+        tweetId: comment.tweetId,
+        action: 'unlike',
+        data,
+        variables,
+      })
     },
   })
 
