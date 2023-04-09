@@ -40,7 +40,7 @@ const Tweet = () => {
         <div className='my-8'>
           <p>{tweet.content}</p>
         </div>
-        <TweetActions tweet={tweet} />
+        <TweetActions tweet={tweet} client={client} />
       </div>
       <div className='p-4'>
         <h2 className='p-4 text-xl font-semibold'>Comments</h2>

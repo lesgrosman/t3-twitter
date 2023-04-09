@@ -1,5 +1,5 @@
 import { QueryClient } from '@tanstack/react-query'
-import { TimelineQueryKey, Tweet } from '@/utils/types'
+import { Tweet } from '@/utils/types'
 import { useRouter } from 'next/router'
 import { useState } from 'react'
 import LocalizedDate from '@/utils/components/LocalizedDate'
@@ -10,11 +10,10 @@ import TweetActions from './TweetActions'
 
 interface Props {
   tweet: Tweet
-  client?: QueryClient
-  queryKey: TimelineQueryKey
+  client: QueryClient
 }
 
-const Tweet = ({ tweet, client, queryKey }: Props) => {
+const Tweet = ({ tweet, client }: Props) => {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const router = useRouter()
 
@@ -30,6 +29,7 @@ const Tweet = ({ tweet, client, queryKey }: Props) => {
         authorImage={tweet.author.image || ''}
         isOpen={isModalOpen}
         title='Edit tweet'
+        client={client}
       />
       <div
         className='w-full cursor-pointer border-b-[1px] p-4 hover:bg-slate-100'
@@ -53,15 +53,10 @@ const Tweet = ({ tweet, client, queryKey }: Props) => {
                   <LocalizedDate date={tweet.createdAt} />
                 </span>
               </div>
-              <MoreActions
-                tweet={tweet}
-                openModal={() => setIsModalOpen(true)}
-                client={client}
-                queryKey={queryKey}
-              />
+              <MoreActions tweet={tweet} openModal={() => setIsModalOpen(true)} client={client} />
             </div>
             <span>{tweet.content}</span>
-            <TweetActions tweet={tweet} client={client} queryKey={queryKey} />
+            <TweetActions tweet={tweet} client={client} />
           </div>
         </div>
       </div>

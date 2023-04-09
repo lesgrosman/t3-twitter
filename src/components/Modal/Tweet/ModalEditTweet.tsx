@@ -1,7 +1,10 @@
+import { QueryClient } from '@tanstack/react-query'
 import { Tweet } from '@/utils/types'
 import { api } from '@/utils/api'
+import { queryKeys } from '@/utils/constants'
+import { updateCacheEditTweet } from '@/components/Timeline/updateCache'
 import React, { useState } from 'react'
-import View from './View'
+import View from './ViewEdit'
 
 interface Props {
   tweet: Tweet
@@ -9,27 +12,21 @@ interface Props {
   onClose: () => void
   isOpen: boolean
   title: string
+  client: QueryClient
 }
 
-const ModalEditTweet = ({ tweet, authorImage, onClose, isOpen, title }: Props) => {
-  const { data } = api.tweet.getById.useQuery({
-    id: tweet.id,
-  })
+const ModalEditTweet = ({ tweet, authorImage, onClose, isOpen, title, client }: Props) => {
+  const [content, setContent] = useState(tweet.content || '')
 
-  const [content, setContent] = useState(data?.tweet.content || '')
-
-  const ctx = api.useContext()
   const { mutate, isLoading } = api.tweet.update.useMutation({
-    onSuccess: async () => {
+    onSuccess: (data, variables) => {
+      queryKeys.forEach(queryKey =>
+        updateCacheEditTweet({ client, data: data.tweet, variables, queryKey })
+      )
       setContent('')
-      await ctx.tweet.getAll.invalidate()
-      await ctx.tweet.getMy.invalidate()
-      await ctx.tweet.getById.invalidate()
       onClose()
     },
   })
-
-  if (!data?.tweet) return null
 
   const handleCreate = () => {
     content.trim() &&
@@ -44,7 +41,7 @@ const ModalEditTweet = ({ tweet, authorImage, onClose, isOpen, title }: Props) =
   return (
     <View
       isOpen={isOpen}
-      initialContent={data.tweet.content}
+      initialContent={tweet.content}
       onChange={(val: string) => setContent(val)}
       isDisabled={isCreateDisabled}
       onClose={onClose}

@@ -1,25 +1,25 @@
 import { EllipsisVerticalIcon } from '@heroicons/react/24/solid'
 import { QueryClient } from '@tanstack/react-query'
-import { TimelineQueryKey, Tweet } from '@/utils/types'
+import { Tweet } from '@/utils/types'
 import { api } from '@/utils/api'
-import { updateCacheDelete } from '../Timeline/updateCacheDelete'
+import { queryKeys } from '@/utils/constants'
+import { updateCacheDeleteTweet } from '../Timeline/updateCache'
 import { useSession } from 'next-auth/react'
 
 interface Props {
   tweet: Tweet
   openModal: () => void
-  client?: QueryClient
-  queryKey?: TimelineQueryKey
+  client: QueryClient
 }
 
-const MoreActions = ({ tweet, openModal, client, queryKey }: Props) => {
+const MoreActions = ({ tweet, openModal, client }: Props) => {
   const { data: session } = useSession()
 
   const { mutate } = api.tweet.delete.useMutation({
     onSuccess: variables => {
-      // await ctx.tweet.getMy.invalidate()
-      // await ctx.tweet.getAll.invalidate()
-      client && updateCacheDelete({ client, variables: variables.tweetId, queryKey })
+      queryKeys.forEach(queryKey =>
+        updateCacheDeleteTweet({ client, variables: variables.tweetId, queryKey })
+      )
     },
   })
 
