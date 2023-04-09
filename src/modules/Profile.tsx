@@ -1,4 +1,5 @@
 import { api } from '@/utils/api'
+import { useQueryClient } from '@tanstack/react-query'
 import { useSession } from 'next-auth/react'
 import NextImage from 'next/image'
 import Timeline from '@/components/Timeline/Timeline'
@@ -6,6 +7,7 @@ import Timeline from '@/components/Timeline/Timeline'
 const Profile = () => {
   const { data: session } = useSession()
   const { data } = api.tweet.getMy.useQuery()
+  const client = useQueryClient()
 
   if (!session) return null
 
@@ -22,7 +24,7 @@ const Profile = () => {
         <h1 className='text-xl font-semibold'>{session.user.name}</h1>
         <span className='mb-8 text-gray-400'>{session.user.email}</span>
       </div>
-      <Timeline tweets={data?.tweets || []} queryKey='getMy' />
+      <Timeline tweets={data?.tweets || []} client={client} />
     </div>
   )
 }

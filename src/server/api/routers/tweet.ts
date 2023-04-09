@@ -129,14 +129,25 @@ export const tweetRouter = createTRPCRouter({
         },
       })
 
-      if (!user) return null
+      if (!user) throw new Error('INTERNAL_SERVER_ERROR: Unauthorized')
 
       const tweet = await ctx.prisma.tweet.create({
         data: {
           authorId: user.id,
           content: input.content,
         },
+        include: {
+          author: true,
+          likes: {
+            include: {
+              author: true,
+            },
+          },
+          comments: true,
+        },
       })
+
+      if (!tweet) throw new Error('INTERNAL_SERVER_ERROR: Something wet wrong')
 
       return {
         tweet,
@@ -152,6 +163,15 @@ export const tweetRouter = createTRPCRouter({
         },
         data: {
           content: input.content,
+        },
+        include: {
+          author: true,
+          likes: {
+            include: {
+              author: true,
+            },
+          },
+          comments: true,
         },
       })
 

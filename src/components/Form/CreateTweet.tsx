@@ -1,16 +1,24 @@
+import { QueryClient } from '@tanstack/react-query'
+import { TimelineQueryKey } from '@/utils/types'
 import { api } from '@/utils/api'
+import { queryKeys } from '@/utils/constants'
+import { updateCacheCreateTweet } from '../Timeline/updateCache'
 import { useSession } from 'next-auth/react'
 import { useState } from 'react'
 import NextImage from 'next/image'
 
-const CreateTweet = () => {
+interface Props {
+  queryKey: TimelineQueryKey
+  client: QueryClient
+}
+
+const CreateTweet = ({ client }: Props) => {
   const [content, setContent] = useState('')
-  const ctx = api.useContext()
 
   const { mutate, isLoading } = api.tweet.create.useMutation({
-    onSuccess: async () => {
+    onSuccess: data => {
+      queryKeys.forEach(queryKey => updateCacheCreateTweet({ client, data: data.tweet, queryKey }))
       setContent('')
-      await ctx.tweet.getAll.invalidate()
     },
   })
 

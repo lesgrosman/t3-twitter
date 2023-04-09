@@ -1,42 +1,44 @@
 import { ChatBubbleOvalLeftIcon } from '@heroicons/react/24/solid'
 import { HeartIcon } from '@heroicons/react/24/solid'
 import { QueryClient } from '@tanstack/react-query'
-import { TimelineQueryKey, Tweet } from '@/utils/types'
+import { Tweet } from '@/utils/types'
 import { api } from '@/utils/api'
-import { updateCache } from '../Timeline/updateCache'
+import { queryKeys } from '@/utils/constants'
+import { updateCacheLikeTweet } from '../Timeline/updateCache'
 import { useSession } from 'next-auth/react'
 
 interface Props {
   tweet: Tweet
-  client?: QueryClient
-  queryKey?: TimelineQueryKey
+  client: QueryClient
 }
 
-const TweetActions = ({ tweet, client, queryKey }: Props) => {
+const TweetActions = ({ tweet, client }: Props) => {
   const { data: session } = useSession()
 
   const { mutate: like, isLoading: isLikeLoading } = api.like.likeTweet.useMutation({
     onSuccess: (data, variables) => {
-      client &&
-        updateCache({
+      queryKeys.forEach(queryKey =>
+        updateCacheLikeTweet({
           client,
           variables,
           data,
           action: 'like',
           queryKey,
         })
+      )
     },
   })
   const { mutate: unlike, isLoading: isDislikeLoading } = api.like.unlikeTweet.useMutation({
     onSuccess: (data, variables) => {
-      client &&
-        updateCache({
+      queryKeys.forEach(queryKey =>
+        updateCacheLikeTweet({
           client,
           variables,
           data,
           action: 'unlike',
           queryKey,
         })
+      )
     },
   })
 

@@ -1,6 +1,8 @@
 import { api } from '@/utils/api'
+import { updateCacheCreateTweet } from '@/components/Timeline/updateCache'
+import { useQueryClient } from '@tanstack/react-query'
 import React, { useState } from 'react'
-import View from './View'
+import View from './ViewCreate'
 
 interface Props {
   authorImage?: string | null
@@ -11,13 +13,13 @@ interface Props {
 
 const ModalCreateTweet = ({ authorImage, onClose, isOpen, title }: Props) => {
   const [content, setContent] = useState('')
+  const client = useQueryClient()
 
-  const ctx = api.useContext()
   const { mutate, isLoading } = api.tweet.create.useMutation({
-    onSuccess: async () => {
+    onSuccess: data => {
       setContent('')
-      await ctx.tweet.getAll.invalidate()
-      await ctx.tweet.getMy.invalidate()
+      updateCacheCreateTweet({ client, data: data.tweet, queryKey: 'getAll' })
+      updateCacheCreateTweet({ client, data: data.tweet, queryKey: 'getMy' })
       onClose()
     },
   })
@@ -34,6 +36,7 @@ const ModalCreateTweet = ({ authorImage, onClose, isOpen, title }: Props) => {
   return (
     <View
       isOpen={isOpen}
+      content={content}
       onChange={(val: string) => setContent(val)}
       isDisabled={isCreateDisabled}
       onClose={onClose}

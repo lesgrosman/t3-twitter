@@ -1,19 +1,17 @@
-import { TimelineQueryKey, Tweet as TweeType } from '@/utils/types'
-import { useQueryClient } from '@tanstack/react-query'
+import { QueryClient } from '@tanstack/react-query'
+import { Tweet as TweeType } from '@/utils/types'
 import Tweet from '@/components/Tweet/Tweet'
 
 interface Props {
   tweets: TweeType[]
-  queryKey: TimelineQueryKey
+  client: QueryClient
 }
 
-const Timeline = ({ tweets, queryKey }: Props) => {
-  const client = useQueryClient()
-
+const Timeline = ({ tweets, client }: Props) => {
   return (
     <div>
       {tweets?.map(tweet => (
-        <Tweet key={tweet.id} tweet={tweet} client={client} queryKey={queryKey} />
+        <Tweet key={tweet.id} tweet={tweet} client={client} />
       ))}
     </div>
   )
