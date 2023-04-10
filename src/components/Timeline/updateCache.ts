@@ -26,12 +26,24 @@ export const updateCacheLikeTweet = ({
     (oldData?: { tweets?: Tweet[] }) => {
       const newTweets = oldData?.tweets?.map((tweet: Tweet) => {
         if (tweet.id === variables.id) {
-          return {
-            ...tweet,
-            likes:
-              action === 'like'
-                ? [...tweet.likes, data]
-                : tweet.likes.filter((like: TweetLike) => like.tweetId !== variables.id),
+          if (action === 'like') {
+            return {
+              ...tweet,
+              likes: [data, ...tweet.likes],
+            }
+          } else {
+            const unlikeIndex = tweet.likes
+              .map((like: TweetLike) => like.tweetId)
+              .indexOf(variables.id)
+            const newLikes = [
+              ...tweet.likes.slice(0, unlikeIndex),
+              ...tweet.likes.slice(unlikeIndex + 1),
+            ]
+
+            return {
+              ...tweet,
+              likes: newLikes,
+            }
           }
         }
         return tweet
