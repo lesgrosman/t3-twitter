@@ -29,12 +29,24 @@ export const updateCacheCommentLikes = ({
     (oldData: any) => {
       const newComments = oldData?.tweet?.comments?.map((comment: Comment) => {
         if (comment.id === variables.id) {
-          return {
-            ...comment,
-            likes:
-              action === 'like'
-                ? [...comment.likes, data]
-                : comment.likes.filter((like: CommentLike) => like.commentId !== variables.id),
+          if (action === 'like') {
+            return {
+              ...comment,
+              likes: [data, ...comment.likes],
+            }
+          } else {
+            const unlikeIndex = comment.likes
+              .map((like: CommentLike) => like.commentId)
+              .indexOf(variables.id)
+            const newLikes = [
+              ...comment.likes.slice(0, unlikeIndex),
+              ...comment.likes.slice(unlikeIndex + 1),
+            ]
+
+            return {
+              ...comment,
+              likes: newLikes,
+            }
           }
         } else {
           return comment
