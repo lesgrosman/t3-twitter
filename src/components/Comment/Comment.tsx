@@ -14,6 +14,9 @@ interface Props {
 
 const Comment = ({ comment, client }: Props) => {
   const [isModalOpen, setIsModalOpen] = useState(false)
+
+  console.log(isModalOpen)
+
   return (
     <>
       <ModalEditComment
