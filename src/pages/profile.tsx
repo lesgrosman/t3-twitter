@@ -3,6 +3,7 @@ import Head from 'next/head'
 import Profile from '@/modules/Profile'
 
 const ProfilePage: NextPage = () => {
+  console.log('test')
   return (
     <>
       <Head>
